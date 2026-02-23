@@ -18,7 +18,6 @@ def chat():
 
     return jsonify(response.json())
 
-import os
-if__name__=="__main__":
-   port = int(os.environ.get("PORT",10000))
-app.run(host"0.0.0.0", port=port)
+if _name_ == "_main_":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
