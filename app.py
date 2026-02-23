@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 import os
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 HF_TOKEN = os.environ.get("HF_TOKEN")
 
@@ -17,7 +17,3 @@ def chat():
     )
 
     return jsonify(response.json())
-
-if _name_ == "_main_":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
