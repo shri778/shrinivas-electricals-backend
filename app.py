@@ -1,29 +1,18 @@
-from flask import Flask,form flask_cors import CORS request, jsonify
-import requests
-import os
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(_name_)
 CORS(app)
-
-HF_TOKEN = os.environ.get("HF_TOKEN")
-
-@app.route("/test")
-def test():
-    return "Chat route exists"
 
 @app.route("/")
 def home():
-    return "Backend is running "
-    
+    return "Backend is running"
+
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_input = request.json.get("message")
+    data = request.json
+    user_message = data.get("message", "")
 
-    response = requests.post(
-        "https://api-inference.huggingface.co/models/google/flan-t5-small",
-        headers={"Authorization": f"Bearer {HF_TOKEN}"},
-        json={"inputs": user_input}
-    )
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Uses Render PORT if available
-    app.run(host="0.0.0.0", port=port)
+    return jsonify({
+        "response": f"You said: {user_message}"
+    })
