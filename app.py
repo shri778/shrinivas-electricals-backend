@@ -6,9 +6,13 @@ app = Flask(__name__)
 
 HF_TOKEN = os.environ.get("HF_TOKEN")
 
+@app.route("/")
+def home():
+    return "Backend is running "
+
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_input = request.json["message"]
+    user_input = request.json.get("message")
 
     response = requests.post(
         "https://api-inference.huggingface.co/models/google/flan-t5-small",
