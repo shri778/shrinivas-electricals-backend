@@ -23,7 +23,9 @@ def chat():
         headers={"Authorization": f"Bearer {HF_TOKEN}"},
         json={"inputs": user_input}
     )
-
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))  # Uses Render PORT if available
+    app.run(host="0.0.0.0", port=port
     return jsonify(response.json())
 if __name__ == "__main__":
     port = int(os.environ.get("PORT",
