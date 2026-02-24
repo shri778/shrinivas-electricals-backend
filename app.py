@@ -6,10 +6,14 @@ app = Flask(__name__)
 
 HF_TOKEN = os.environ.get("HF_TOKEN")
 
+@app.route("/test")
+def test():
+    return "Chat route exists"
+
 @app.route("/")
 def home():
     return "Backend is running "
-
+    
 @app.route("/chat", methods=["POST"])
 def chat():
     user_input = request.json.get("message")
