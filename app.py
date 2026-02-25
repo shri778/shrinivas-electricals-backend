@@ -9,8 +9,20 @@ CORS(app)
 def home():
     return "Backend is running"
 
-@app.route("/chat", methods=["POST"])
+@app.route("/chat", methods=["GET", "POST"])
 def chat():
+    if request.method == "GET":
+        return "Chat route is working"
+
+    data = request.get_json()
+
+    if not data or "message" not in data:
+        return jsonify({"reply": "No message received"}), 400
+
+    user_message = data["message"]
+    reply = "You said: " + user_message
+
+    return jsonify({"reply": reply})
     user_message = request.json["message"]
 
     reply = "You said: " + user_message
