@@ -11,11 +11,15 @@ def home():
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json()
+    print("DEBUG: Received data =", data)
+    
     if not data or "message" not in data:
         
         return jsonify({"reply": "No message received"}), 400
+    
     user_message = data["message"]
     reply = "You said: " + user_message
+    
     return jsonify({"reply": reply})
 
 if __name__ == "__main__":
