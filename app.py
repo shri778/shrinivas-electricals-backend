@@ -8,7 +8,7 @@ CORS(app)
 
 HF_API_KEY = os.environ.get("HF_API_KEY")
 
-API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-small"
+API_URL = "https://router.huggingface.co/hf-inference/models/google/flan-t5-small"
 
 headers = {
     "Authorization": f"Bearer {HF_API_KEY}",
@@ -18,7 +18,7 @@ headers = {
 
 @app.route("/")
 def home():
-    return "Jiraiya AI with Hugging Face is Running 🚀"
+    return "Jiraiya AI is Running 🚀"
 
 
 @app.route("/chat", methods=["POST"])
@@ -43,20 +43,20 @@ def chat():
             API_URL,
             headers=headers,
             json=payload,
-            timeout=30
+            timeout=60
         )
 
         result = response.json()
         print("HF Response:", result)
 
-        # If model returns normal answer
+        # If successful response
         if isinstance(result, list) and len(result) > 0:
             reply = result[0].get("generated_text", "No response generated.")
 
-        # If model still loading
+        # If model is loading
         elif isinstance(result, dict) and "error" in result:
             if "loading" in result["error"].lower():
-                reply = "Model is starting. Please try again in 30 seconds."
+                reply = "Model is starting. Please wait 30-60 seconds and try again."
             else:
                 reply = "Hugging Face Error: " + result["error"]
 
