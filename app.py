@@ -16,18 +16,6 @@ headers = {
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    data = request.get_json(force=True, silent=True)
-
-    if not data:
-        return jsonify({"reply": "No JSON received"}), 400
-
-    if "message" not in data:
-        return jsonify({"reply": "No message key"}), 400
-
-    return "Backend is running"
-
-@app.route("/chat", methods=["POST"])
-def chat():
     data = request.get_json()
 
     if not data or "message" not in data:
@@ -35,8 +23,7 @@ def chat():
 
     user_message = data["message"]
 
-    try:
-        response = requests.post(
+      response = requests.post(
             API_URL,
             headers=headers,
             json={"inputs": user_message},
