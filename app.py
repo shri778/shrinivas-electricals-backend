@@ -14,8 +14,16 @@ headers = {
     "Authorization": f"Bearer {HF_API_KEY}"
 }
 
-@app.route("/")
-def home():
+@app.route("/chat", methods=["POST"])
+def chat():
+    data = request.get_json(force=True, silent=True)
+
+    if not data:
+        return jsonify({"reply": "No JSON received"}), 400
+
+    if "message" not in data:
+        return jsonify({"reply": "No message key"}), 400
+
     return "Backend is running"
 
 @app.route("/chat", methods=["POST"])
