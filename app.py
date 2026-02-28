@@ -1,24 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import requests
-import os
 
 app = Flask(__name__)
 CORS(app)
 
-HF_API_KEY = os.environ.get("HF_API_KEY")
-
-API_URL = "https://router.huggingface.co/hf-inference/models/google/flan-t5-small"
-
-headers = {
-    "Authorization": f"Bearer {HF_API_KEY}",
-    "Content-Type": "application/json"
-}
-
 
 @app.route("/")
 def home():
-    return "Jiraiya AI is Running 🚀"
+    return "Shrinivas Electricals Assistant is Running ⚡"
 
 
 @app.route("/chat", methods=["POST"])
@@ -27,44 +16,53 @@ def chat():
         data = request.get_json()
 
         if not data or "message" not in data:
-            return jsonify({"reply": "No message received"}), 400
+            return jsonify({"reply": "Please ask something."}), 400
 
-        user_message = data["message"]
+        user_message = data["message"].lower()
 
-        payload = {
-            "inputs": user_message,
-            "parameters": {
-                "max_new_tokens": 80,
-                "temperature": 0.7
-            }
-        }
+        # Product replies
+        if "fan" in user_message:
+            reply = "Yes, we have ceiling fans and table fans available. Please visit Shrinivas Electricals, Nanded for prices."
 
-        response = requests.post(
-            API_URL,
-            headers=headers,
-            json=payload,
-            timeout=60
-        )
+        elif "mixer" in user_message:
+            reply = "Yes, mixer grinders are available at Shrinivas Electricals."
 
-        result = response.json()
-        print("HF Response:", result)
+        elif "wire" in user_message:
+            reply = "We sell high-quality electric wires and PVC wire pipes."
 
-        # If successful response
-        if isinstance(result, list) and len(result) > 0:
-            reply = result[0].get("generated_text", "No response generated.")
+        elif "bulb" in user_message or "led" in user_message:
+            reply = "Yes, LED bulbs and lights are available in different watt options."
 
-        # If model is loading
-        elif isinstance(result, dict) and "error" in result:
-            if "loading" in result["error"].lower():
-                reply = "Model is starting. Please wait 30-60 seconds and try again."
-            else:
-                reply = "Hugging Face Error: " + result["error"]
+        elif "switch" in user_message or "board" in user_message:
+            reply = "We have switch boards, switches and electrical fittings available."
+
+        elif "iron" in user_message:
+            reply = "Electric irons are available in our shop."
+
+        elif "battery" in user_message:
+            reply = "Yes, we sell batteries. Please visit for more details."
+
+        # Shop information
+        elif "time" in user_message or "open" in user_message:
+            reply = "Shrinivas Electricals is open from 11 AM to 9 PM."
+
+        elif "location" in user_message or "where" in user_message:
+            reply = "We are located in Nanded. Visit Shrinivas Electricals for all electrical needs."
+
+        elif "delivery" in user_message or "shipping" in user_message:
+            reply = "Currently we do not provide home delivery. Please visit the shop directly."
+
+        elif "contact" in user_message:
+            reply = "Please visit Shrinivas Electricals in Nanded during working hours (11 AM - 9 PM)."
+
+        elif "hi" in user_message or "hello" in user_message:
+            reply = "Welcome to Shrinivas Electricals ⚡ How can we help you today?"
 
         else:
-            reply = "Unexpected model response."
+            reply = "We sell electrical items like fans, mixers, wires, bulbs, LED lights, switch boards, pipes, irons and batteries. Please ask about these items."
 
         return jsonify({"reply": reply})
 
     except Exception as e:
-        print("Server Error:", str(e))
-        return jsonify({"reply": "Server error occurred"}), 500
+        print("Error:", str(e))
+        return jsonify({"reply": "Something went wrong."}), 500
